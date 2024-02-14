@@ -31,7 +31,7 @@ app.use("*", (req, res) => {
 
 // Error handler
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, nex) => {
     console.log(err);
     res.status(500).json({ message: err.message || "something went wrong" })
 })
