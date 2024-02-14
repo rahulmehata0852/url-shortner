@@ -2,6 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
 const cookieParser = require("cookie-parser")
+const path = require("path")
 const { userProtected, adminProtected } = require("./middlewares/protected")
 require("dotenv").config({ path: "./.env" })
 
@@ -9,8 +10,9 @@ require("dotenv").config({ path: "./.env" })
 mongoose.connect(process.env.MONGO_URL)
 
 const app = express()
+app.use(express.static())
 
-app.use(express.json())
+app.use(express.json(path.join(__dirname, "dist")))
 app.use(cors(
     {
         origin: "http://localhost:5173",
@@ -26,7 +28,8 @@ app.use("/api/v1/user", userProtected, require("./routes/userRoutes"))
 app.use("/api/v1/admin", adminProtected, require("./routes/adminRoute"))
 
 app.use("*", (req, res) => {
-    res.status(404).json({ message: "Resource not found" })
+    res.sendFile(path.join(__dirname, "dist", "index.html"))
+    // res.status(404).json({ message: "Resource not found" })
 })
 
 // Error handler
